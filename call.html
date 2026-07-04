@@ -3,43 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>発信中...</title>
+    <title>CONFIRMATION</title>
+    <style>
+        body {
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+        }
+        .container {
+            background-color: white;
+            max-width: 450px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            padding: 24px;
+            box-sizing: border-box;
+        }
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #eef2f5;
+            padding-bottom: 10px;
+            line-height: 1.4;
+        }
+        .info-block {
+            margin-bottom: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #34495e;
+        }
+        .btn {
+            display: block;
+            text-align: center;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 24px;
+            box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
+        }
+    </style>
 </head>
-<body style="background-color: #f8f9fa; margin: 0; padding: 0;">
+<body>
 
-    <div style="text-align: center; margin-top: 100px; font-family: sans-serif; color: #333;">
-        <h3 id="status-text">電話発信画面を起動しています...</h3>
-        <p style="margin-top: 20px;">
-            ※自動で起動しない場合は、下のボタンをタップしてください。
-        </p>
-        <a href="#" id="manual-link" style="display: inline-block; margin-top: 20px; padding: 15px 30px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            📞 電話をかける
-        </a>
+    <div class="container">
+        <div class="title" id="display-title">---</div>
+        <div id="info-content"></div>
+        <a href="#" id="call-button" class="btn">---</a>
     </div>
 
     <script>
-        // 画面が完全に読み込まれてから実行する
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const tel = urlParams.get('tel');
-            const statusText = document.getElementById('status-text');
-            const manualLink = document.getElementById('manual-link');
+            
+            const tel = urlParams.get('tel') || '';
+            const title = urlParams.get('title') || 'CONFIRMATION';
+            const btnText = urlParams.get('btn') || 'CALL';
+            
+            // タイトルとボタンの文字を設定
+            document.getElementById('display-title').innerText = title;
+            document.getElementById('display-button-text'); // ダミー
+            
+            const callBtn = document.getElementById('call-button');
+            callBtn.innerText = btnText;
+
+            // 項目名を固定せず、URLにある「txt1, txt2...」をあるだけ全て上から順に表示する
+            const contentDiv = document.getElementById('info-content');
+            let idx = 1;
+            while (urlParams.has('txt' + idx)) {
+                const textValue = urlParams.get('txt' + idx);
+                if (textValue) {
+                    const p = document.createElement('div');
+                    p.className = 'info-block';
+                    p.innerText = textValue;
+                    contentDiv.appendChild(p);
+                }
+                idx++;
+            }
 
             if (tel) {
-                // 電話番号をハイフンなしの数字のみにクリーニング（念のため）
                 const cleanTel = tel.replace(/[^0-9]/g, '');
-                const telUrl = 'tel:' + cleanTel;
-
-                // 手動用ボタンにURLを設定
-                manualLink.href = telUrl;
-
-                // スマホの電話アプリを起動
-                window.location.href = telUrl;
+                callBtn.href = 'tel:' + cleanTel;
+                window.location.href = 'tel:' + cleanTel;
             } else {
-                // URLに電話番号が含まれていない場合のエラー表示。
-                statusText.innerText = "❌ エラー: 電話番号が指定されていません。";
-                statusText.style.color = "#dc3545";
-                manualLink.style.display = "none";
+                callBtn.style.display = "none";
             }
         });
     </script>
