@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>発信中...</title>
+</head>
+<body style="background-color: #f8f9fa; margin: 0; padding: 0;">
+
+    <div style="text-align: center; margin-top: 100px; font-family: sans-serif; color: #333;">
+        <h3 id="status-text">電話発信画面を起動しています...</h3>
+        <p style="margin-top: 20px;">
+            ※自動で起動しない場合は、下のボタンをタップしてください。
+        </p>
+        <a href="#" id="manual-link" style="display: inline-block; margin-top: 20px; padding: 15px 30px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            📞 電話をかける
+        </a>
+    </div>
+
+    <script>
+        // 画面が完全に読み込まれてから実行する
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tel = urlParams.get('tel');
+            const statusText = document.getElementById('status-text');
+            const manualLink = document.getElementById('manual-link');
+
+            if (tel) {
+                // 電話番号をハイフンなしの数字のみにクリーニング（念のため）
+                const cleanTel = tel.replace(/[^0-9]/g, '');
+                const telUrl = 'tel:' + cleanTel;
+
+                // 手動用ボタンにURLを設定
+                manualLink.href = telUrl;
+
+                // スマホの電話アプリを起動
+                window.location.href = telUrl;
+            } else {
+                // URLに電話番号が含まれていない場合のエラー表示
+                statusText.innerText = "❌ エラー: 電話番号が指定されていません。";
+                statusText.style.color = "#dc3545";
+                manualLink.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
