@@ -71,14 +71,12 @@
             const title = urlParams.get('title') || 'CONFIRMATION';
             const btnText = urlParams.get('btn') || 'CALL';
             
-            // タイトルとボタンの文字を設定
             document.getElementById('display-title').innerText = title;
             document.getElementById('display-button-text'); // ダミー
             
             const callBtn = document.getElementById('call-button');
             callBtn.innerText = btnText;
 
-            // 項目名を固定せず、URLにある「txt1, txt2...」をあるだけ全て上から順に表示する
             const contentDiv = document.getElementById('info-content');
             let idx = 1;
             while (urlParams.has('txt' + idx)) {
@@ -95,7 +93,6 @@
             if (tel) {
                 const cleanTel = tel.replace(/[^0-9]/g, '');
                 callBtn.href = 'tel:' + cleanTel;
-                window.location.href = 'tel:' + cleanTel;
             } else {
                 callBtn.style.display = "none";
             }
